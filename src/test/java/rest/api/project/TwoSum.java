@@ -49,7 +49,7 @@ public int[] twoSumPerebor(int[] nums, int target) {
 
 
 @Test 
-@DisplayName ("testTwoSumPerebor")
+@DisplayName ("Сумма чисел через перебор")
 public void testTwoSumPerebor() {
     int[] inputNumbers = {1, 15, 8, 2, 7};
     int target = 9;
@@ -59,7 +59,7 @@ public void testTwoSumPerebor() {
 }
 
 @Test 
-@DisplayName ("testTwoSumHashMap")
+@DisplayName ("Сумма чисел через HashMap")
 public void testTwoSumHashMap() {
     int[] inputNumbers = {3, 15, 8, 2, 7};
     int target = 9;
