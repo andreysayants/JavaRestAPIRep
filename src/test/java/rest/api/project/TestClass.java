@@ -3,6 +3,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -252,5 +253,41 @@ public class TestClass {
             .andReturn();
 
         responseForCheck.print();    
+    }
+
+    @Test 
+    @DisplayName ("Логин успешный")
+    public void testAuthUser(){
+        Map<String, String> authData = new HashMap<>();
+        authData.put("email", "vinkotov@example.com");
+        authData.put("password", "1234");
+
+        Response responseGetAuth = RestAssured
+            .given()
+            .relaxedHTTPSValidation()
+            .body(authData)
+            .post("https://playground.learnqa.ru/api/user/login")
+            .andReturn();
+
+        Map<String, String> cookies = responseGetAuth.getCookies();  
+        Headers headers = responseGetAuth.getHeaders();
+        int userIdOnAuth = responseGetAuth.jsonPath().getInt("user_id");
+
+        assertEquals(200, responseGetAuth.getStatusCode(), "Unexpected status code");
+        assertTrue(cookies.containsKey("auth_sid"), "Response doesn't have 'auth_sid' cookie");
+        assertTrue(headers.hasHeaderWithName("x-csrf-token"), "Response doen't havve 'x-csrf-token' header");
+        assertTrue(responseGetAuth.jsonPath().getInt("user_id")>0, "User id should be greater then 0");
+
+        JsonPath responseCheckAuth = RestAssured
+            .given()
+            .relaxedHTTPSValidation()
+            .header("x-csrf-token", responseGetAuth.getHeader("x-csrf-token"))
+            .cookie("auth_sid", responseGetAuth.getCookie("auth_sid"))
+            .get("https://playground.learnqa.ru/api/user/auth")
+            .jsonPath();
+
+        int userIdOnCheck = responseCheckAuth.getInt("user_id");
+        assertTrue(userIdOnCheck > 0, "Unexpected user_id " + userIdOnCheck);
+        assertEquals(userIdOnAuth, userIdOnCheck, "user_id from auth request is not equal to user_id from check request");
     }
 }
