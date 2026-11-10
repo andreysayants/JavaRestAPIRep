@@ -2,8 +2,11 @@ package rest.api.project;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import io.restassured.RestAssured;
 import io.restassured.http.Headers;
@@ -27,6 +30,8 @@ public class TestClass {
             .when()
             .get("https://playground.learnqa.ru/api/hello")
             .andReturn();
+
+        assertEquals(200, response.statusCode(), "Unexpected status code");
 
         response.prettyPrint();        
 
@@ -52,7 +57,34 @@ public class TestClass {
             System.out.println(name);
         }
 
+        assertEquals(null, name, "Введен верный атрибут answer");
+
     }
+
+    @ParameterizedTest 
+    @ValueSource(strings = {"", "Anton", "Andrey"})
+    @DisplayName ("Параметризированный тест")
+    public void testRAParametrized(String name){
+        Map<String, String> params = new HashMap<>();
+
+        if(name.length()>0){
+            params.put("name", name);
+        }
+
+        JsonPath response = RestAssured
+            .given()
+            .relaxedHTTPSValidation()
+            .queryParams(params)
+            .when()
+            .get("https://playground.learnqa.ru/api/hello")
+            .jsonPath();
+
+        String answer = response.getString("answer");
+        String expectedName = (name.length()>0) ? name : "someone";
+        assertEquals("Hello, " + expectedName, answer, "The answer is not expected");
+    }
+
+
 
     @Test 
     @DisplayName ("Методы GET")
