@@ -29,19 +29,17 @@ public int[] twoSumPerebor(int[] nums, int target) {
         Map<Integer, Integer> map = new HashMap<>();
         
         for (int i = 0; i < nums.length; i++) {
-            int complement = target - nums[i];
-            
+            int complement = target - nums[i];       
+                 
             // Если нужное число уже есть в мапе, возвращаем индексы
             if(map.containsKey(complement)) {
                 System.out.println("Нашли числа, возвращаем индекс числа "+ nums[i-1] +" уже добавленного в мапу: " + map.get(complement) + " и текущий индекс: " + i);
                 return new int[] {map.get(complement), i };
-            }
-            
+            }            
             // Иначе сохраняем текущее число и его индекс
             map.put(nums[i], i);
             System.out.println("Не нашли числа, поэтому добавляем текущее число " + nums[i] +" и его индекс " + i + " в HashMap и идем дальше");
-        }
-        
+        }        
         // По условию решение всегда есть, но компилятор требует return
         throw new IllegalArgumentException("No two sum solution");
     }
