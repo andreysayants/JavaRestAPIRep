@@ -25,7 +25,8 @@ public class Test1440 {
                 new Person("Asd", 13),
                 new Person("Zxc", null),
                 new Person("Q.A.Z", 33));
-            
+        
+        System.out.println("Первый вариант");        
         persons.stream().filter(a -> a.getAge() != null && a.getAge() > 18).forEach(p -> System.out.println(p.getName())); 
         
         System.out.println("Второй вариант");
