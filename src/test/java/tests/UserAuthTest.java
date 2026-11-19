@@ -3,8 +3,6 @@ package tests;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,9 +10,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import io.restassured.RestAssured;
-import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import lib.Assertions;
 import lib.BaseTestCase;
 
 public class UserAuthTest extends BaseTestCase {
@@ -47,17 +45,15 @@ public class UserAuthTest extends BaseTestCase {
     @DisplayName ("Логин успешный")
     public void testPositiveAuthUser(){
 
-        JsonPath responseCheckAuth = RestAssured
+        Response responseCheckAuth = RestAssured
             .given()
             .relaxedHTTPSValidation()
             .header("x-csrf-token", this.header)
             .cookie("auth_sid", this.cookie)
             .get("https://playground.learnqa.ru/api/user/auth")
-            .jsonPath();
-
-        int userIdOnCheck = responseCheckAuth.getInt("user_id");
-        assertTrue(userIdOnCheck > 0, "Unexpected user_id " + userIdOnCheck);
-        assertEquals(userIdOnAuth, userIdOnCheck, "user_id from auth request is not equal to user_id from check request");
+            .andReturn();
+        
+            Assertions.assertJsonByName(responseCheckAuth, "user_id", this.userIdOnAuth);
     }
 
     @ParameterizedTest 
@@ -79,8 +75,8 @@ public class UserAuthTest extends BaseTestCase {
             throw new IllegalArgumentException("Condition value is known: " + condition);
         }
 
-        JsonPath responseForCheck = spec.get().jsonPath();
-        assertEquals(0, responseForCheck.getInt("user_id"), "user_id should be 0 for unauth request");
+        Response responseForCheck = spec.get().andReturn();
+        Assertions.assertJsonByName(responseForCheck, "user_id", 0);
 
     }
 
