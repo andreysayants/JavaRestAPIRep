@@ -20,11 +20,10 @@ public class UserAuthTest extends BaseTestCase {
     String cookie;
     String header;
     int userIdOnAuth;
-    Map<String, String> authData;
 
     @BeforeEach 
     public void loginUser(){
-        authData = new HashMap<>();
+        Map<String, String> authData = new HashMap<>();
         authData.put("email", "vinkotov@example.com");
         authData.put("password", "1234");
 
@@ -38,7 +37,6 @@ public class UserAuthTest extends BaseTestCase {
         this.cookie = this.getCookie(responseGetAuth, "auth_sid");
         this.header = this.getHeader(responseGetAuth, "x-csrf-token");
         this.userIdOnAuth = this.getIntFromJson(responseGetAuth, "user_id");
-        this.authData = authData;
     }
 
     @Test 
@@ -67,12 +65,10 @@ public class UserAuthTest extends BaseTestCase {
 
         spec.baseUri("https://playground.learnqa.ru/api/user/auth");
 
-        if (condition.equals("cookie")) {
-            spec.cookie("auth_sid", this.cookie);
-        } else if (condition.equals("headers")) {
-            spec.header("x-csrf-token", this.header);
-        } else {
-            throw new IllegalArgumentException("Condition value is known: " + condition);
+        switch (condition) {
+            case "cookie" -> spec.cookie("auth_sid", this.cookie);
+            case "headers" -> spec.header("x-csrf-token", this.header);
+            default -> throw new IllegalArgumentException("Condition value is known: " + condition);
         }
 
         Response responseForCheck = spec.get().andReturn();
