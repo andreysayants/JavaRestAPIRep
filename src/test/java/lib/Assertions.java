@@ -20,4 +20,8 @@ public class Assertions {
     public static void assertResponseCodeEquals(Response response, int expectedStatusCode){
         assertEquals(expectedStatusCode, response.statusCode(), "Response status code is not as expected");
     }
+
+    public static void assertJsonHasKey(Response response, String expectedFieldName){
+        response.then().assertThat().body("$", hasKey(expectedFieldName));
+    }
 }
