@@ -24,3 +24,6 @@ hs_err_pid*
 
 target/
 src/test/java/oracleJdk-27/
+allure-results/
+allure-report/*
+!allure-report/index.html
