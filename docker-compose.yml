@@ -1,0 +1,15 @@
+# services: корневой блок, в котором перечисляются все контейнеры (сервисы), которые нужно запустить.
+# test_runner: — внутреннее имя сервиса в Compose.
+# build: . — указывает, что образ нужно собрать из Dockerfile в текущей папке (если он еще не собран или изменился).
+# image: java_api_tests — присваивает собранному образу знакомое имя java_api_tests.
+# container_name: java_runner_works — задает фиксированное понятное имя самому контейнеру, 
+#чтобы его было легко найти в Docker Desktop или в логах.
+# volumes: - .:/tests/ — заменяет длинный флаг --mount type=bind... Пробрасывает текущую папку 
+#с кодом внутрь /tests/ в контейнере, чтобы результаты тестов и отчеты Allure сразу сохранялись на диске.
+services:
+  test_runner:
+    build: .
+    image: java_api_tests
+    container_name: java_runner_works
+    volumes:
+      - .:/tests/
