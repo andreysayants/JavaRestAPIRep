@@ -19,8 +19,8 @@ import lib.Assertions;
 import lib.BaseTestCase;
 
 
-@Epic("Authorisation cases")
-@Feature("Authorisation")
+@Epic("Авторизационные тесты")
+@Feature("Логин")
 public class UserAuthTest extends BaseTestCase {
 
     String cookie;

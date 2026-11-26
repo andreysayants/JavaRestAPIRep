@@ -7,11 +7,15 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
 import io.restassured.response.Response;
 import lib.ApiCoreRequests;
 import lib.Assertions;
 import lib.BaseTestCase;
 
+@Epic("Авторизационные тесты")
+@Feature("Доступы")
 public class UserGetTest extends BaseTestCase {
     ApiCoreRequests apiCoreRequests = new ApiCoreRequests();
 
