@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+    // Jenkins сам скачает Maven3 при первом запуске и добавит его в PATH
+    tools {
+        maven 'Maven3'
+    }
+
     parameters {
         choice(
             name: 'TEST_TAG',
