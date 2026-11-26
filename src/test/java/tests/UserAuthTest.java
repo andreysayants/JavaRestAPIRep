@@ -71,7 +71,7 @@ public class UserAuthTest extends BaseTestCase {
                 this.header);
             Assertions.assertJsonByName(responseForCheck, "user_id", 0);    
         } else {
-            throw new IllegalArgumentException("Condition value is known: " + condition);
+            throw new IllegalArgumentException("Condition value is unknown: " + condition);
         }
     }
 }

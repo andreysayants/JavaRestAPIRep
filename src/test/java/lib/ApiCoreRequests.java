@@ -1,12 +1,13 @@
 package lib;
 
+import static io.restassured.RestAssured.given;
+
+import java.util.Map;
+
 import io.qameta.allure.Step;
 import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.http.Header;
 import io.restassured.response.Response;
-import static io.restassured.RestAssured.given;
-
-import java.util.Map;
 
 public class ApiCoreRequests {
 
@@ -44,6 +45,17 @@ public class ApiCoreRequests {
             .filter(new AllureRestAssured())
             .body(authData)
             .post(url)
+            .andReturn();
+    }
+
+    @Step ("Делаем PUT запрос с editData")
+    public Response makePutRequest(String url, Map<String, String> editData, String header, String cookie){
+        return given()
+            .filter(new AllureRestAssured())
+            .body(editData)
+            .header("x-csrf-token",header)
+            .cookie("auth_sid",cookie)
+            .put(url)
             .andReturn();
     }
 }
