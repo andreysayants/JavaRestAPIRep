@@ -1,7 +1,6 @@
 pipeline {
     agent any
 
-    // Jenkins сам скачает Maven3 при первом запуске и добавит его в PATH
     tools {
         maven 'Maven3'
     }
@@ -18,10 +17,13 @@ pipeline {
         stage('Run Tests') {
             steps {
                 script {
-                    if (params.TEST_TAG == 'all') {
-                        bat 'mvn clean test'
-                    } else {
-                        bat "mvn clean test -Dgroups=${params.TEST_TAG}"
+                    def mvnHome = tool 'Maven3'
+                    withEnv(["PATH+MAVEN=${mvnHome}\\bin"]) {
+                        if (params.TEST_TAG == 'all') {
+                            bat 'mvn clean test'
+                        } else {
+                            bat "mvn clean test -Dgroups=${params.TEST_TAG}"
+                        }
                     }
                 }
             }
@@ -30,7 +32,16 @@ pipeline {
 
     post {
         always {
+            // Стандартный отчет JUnit (опционально)
             junit allowEmptyResults: true, testResults: '**/target/surefire-reports/*.xml'
+
+            // Генерация красивого Allure-отчета
+            allure([
+                includeProperties: false,
+                jdk: '',
+                commandline: 'Allure',
+                results: [[path: 'target/allure-results']]
+            ])
         }
     }
 }
