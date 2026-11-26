@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import io.restassured.RestAssured;
@@ -35,6 +36,7 @@ public class UserRegisterTest extends BaseTestCase {
     }
 
     @Test 
+    @Tag("smoke")
     @DisplayName ("Успешная регистрация пользователя")
     public void testCreateUserSuccessfully(){
         Map<String, String> userData = DataGenerator.getRegistrationData();

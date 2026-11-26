@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import io.restassured.response.Response;
@@ -16,6 +17,7 @@ public class UserEditTest extends BaseTestCase {
     private final ApiCoreRequests apiCoreRequests = new ApiCoreRequests();
 
     @Test 
+    @Tag("smoke")
     @DisplayName ("Изменение пользователя")
     public void testEditJustCreatedUser(){
         //GENERATE USER

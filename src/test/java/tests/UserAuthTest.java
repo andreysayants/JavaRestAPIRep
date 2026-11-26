@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -41,6 +42,7 @@ public class UserAuthTest extends BaseTestCase {
     }
 
     @Test 
+    @Tag("smoke")
     @Description ("Успешный логин пользователя с email и password")
     @DisplayName ("Логин успешный")
     public void testPositiveAuthUser(){
@@ -55,6 +57,7 @@ public class UserAuthTest extends BaseTestCase {
     }
 
     @Description ("Не успешный логин пользователя без cookie или headers")
+    @Tag("smoke")
     @DisplayName ("Логин не успешный")
     @ParameterizedTest 
     @ValueSource (strings = {"cookie", "headers"})

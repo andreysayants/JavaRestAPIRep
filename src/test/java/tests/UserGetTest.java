@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import io.restassured.RestAssured;
@@ -28,6 +29,7 @@ public class UserGetTest extends BaseTestCase {
     }
 
     @Test 
+    @Tag("smoke")
     @DisplayName ("Проверка полей для авторизированного пользователя")
     public void testGetUserDetailsAuthAsSameUser(){
         Map<String, String> authData = new HashMap<>();
