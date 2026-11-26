@@ -1,4 +1,4 @@
-package rest.api.project;
+package rest;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,7 +15,7 @@ import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
-public class TestClass {
+public class JustResponseAndJsonPath {
 
     @Test
     @DisplayName ("Response")

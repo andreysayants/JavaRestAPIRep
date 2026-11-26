@@ -1,4 +1,4 @@
-package rest.api.project;
+package rest;
 
 import java.util.List;
 
