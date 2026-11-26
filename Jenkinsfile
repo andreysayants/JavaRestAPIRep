@@ -1,7 +1,6 @@
 pipeline {
     agent any
 
-    // 1. Создаем параметр для выбора в интерфейсе Jenkins
     parameters {
         choice(
             name: 'TEST_TAG',
@@ -14,21 +13,19 @@ pipeline {
         stage('Run Tests') {
             steps {
                 script {
-                    // 2. Формируем команду: если выбрано 'all', запускаем всё без фильтрации
                     if (params.TEST_TAG == 'all') {
-                        sh 'mvn clean test'
+                        bat 'mvn clean test'
                     } else {
-                        sh "mvn clean test -Dgroups=${params.TEST_TAG}"
+                        bat "mvn clean test -Dgroups=${params.TEST_TAG}"
                     }
                 }
             }
         }
     }
 
-    // 3. Собираем стандартный JUnit-отчет после прогона (даже если тесты упали)
     post {
         always {
-            junit '**/target/surefire-reports/*.xml'
+            junit allowEmptyResults: true, testResults: '**/target/surefire-reports/*.xml'
         }
     }
 }
