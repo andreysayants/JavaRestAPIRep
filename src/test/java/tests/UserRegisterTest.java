@@ -7,13 +7,15 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import io.restassured.RestAssured;
 import io.restassured.response.Response;
+import lib.ApiCoreRequests;
 import lib.Assertions;
 import lib.BaseTestCase;
 import lib.DataGenerator;
 
 public class UserRegisterTest extends BaseTestCase {
+    ApiCoreRequests apiCoreRequests = new ApiCoreRequests();
+
     @Test 
     @DisplayName ("Регистрация пользователя с уже зарегестрированным email")
     public void testCreateUserWithExistinEmail(){
@@ -23,12 +25,9 @@ public class UserRegisterTest extends BaseTestCase {
         userData.put("email", email);
         userData = DataGenerator.getRegistrationData(userData);
 
-        Response responseCreateAuth = RestAssured
-            .given()
-            .relaxedHTTPSValidation()
-            .body(userData)
-            .post("https://playground.learnqa.ru/api/user/")
-            .andReturn();
+        Response responseCreateAuth = apiCoreRequests
+            .makePostRequest("https://playground.learnqa.ru/api/user/",
+            userData);
 
         Assertions.assertResponseCodeEquals(responseCreateAuth, 400);
         Assertions.assertResponseTextEquals(responseCreateAuth, "Users with email '" + email + "' already exists");
@@ -41,12 +40,9 @@ public class UserRegisterTest extends BaseTestCase {
     public void testCreateUserSuccessfully(){
         Map<String, String> userData = DataGenerator.getRegistrationData();
 
-        Response responseCreateAuth = RestAssured
-            .given()
-            .relaxedHTTPSValidation()
-            .body(userData)
-            .post("https://playground.learnqa.ru/api/user/")
-            .andReturn();
+        Response responseCreateAuth = apiCoreRequests
+            .makePostRequest("https://playground.learnqa.ru/api/user/",
+            userData);
 
         Assertions.assertResponseCodeEquals(responseCreateAuth, 200);    
         Assertions.assertJsonHasField(responseCreateAuth, "id");
