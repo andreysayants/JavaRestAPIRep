@@ -7,20 +7,20 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import io.restassured.RestAssured;
 import io.restassured.response.Response;
+import lib.ApiCoreRequests;
 import lib.Assertions;
 import lib.BaseTestCase;
 
 public class UserGetTest extends BaseTestCase {
+    ApiCoreRequests apiCoreRequests = new ApiCoreRequests();
+
     @Test 
     @DisplayName ("Проверка полей для не авторизированного пользователя")
     public void testGetUserDataNotAuth(){
-        Response responseUserData = RestAssured
-            .given()
-            .relaxedHTTPSValidation()
-            .get("https://playground.learnqa.ru/api/user/2")
-            .andReturn();
+
+        Response responseUserData = apiCoreRequests
+            .makeGetRequestWithoutTokenCookie("https://playground.learnqa.ru/api/user/2");
 
         Assertions.assertJsonHasField(responseUserData, "username");
         Assertions.assertJsonHasNotField(responseUserData, "firstname");
@@ -36,26 +36,18 @@ public class UserGetTest extends BaseTestCase {
         authData.put("email", "vinkotov@example.com");
         authData.put("password", "1234");
 
-        Response responseGetAuth = RestAssured
-            .given()
-            .relaxedHTTPSValidation()
-            .body(authData)
-            .post("https://playground.learnqa.ru/api/user/login")
-            .andReturn();
+        Response responseGetAuth = apiCoreRequests
+            .makePostRequest("https://playground.learnqa.ru/api/user/login", authData);
 
         String header = this.getHeader(responseGetAuth, "x-csrf-token");    
         String cookie = this.getCookie(responseGetAuth, "auth_sid");    
 
-        Response responseUserData = RestAssured
-            .given()
-            .relaxedHTTPSValidation()
-            .header("x-csrf-token",header)
-            .cookie("auth_sid", cookie)
-            .get("https://playground.learnqa.ru/api/user/2")
-            .andReturn();
+        Response responseUserData = apiCoreRequests
+            .makeGetRequest(
+                "https://playground.learnqa.ru/api/user/2",
+                header, cookie);
 
         String[] expectedFields = {"username", "firstName", "lastName", "email"};
         Assertions.assertJsonHasFields(responseUserData, expectedFields);
     }
-
 }
